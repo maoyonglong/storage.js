@@ -26,8 +26,9 @@
     }
 })(function() {
     var cookie = {};
-    var localstorage = JSON.parse(JSON.stringify(window.localStorage));
-    var sessionstorage = JSON.parse(JSON.stringify(window.sessionStorage));
+    var localStorage = window.localStorage;
+    var sessionStorage = window.sessionStorage;
+    var Storage = window.localStorage.__proto__;
 
     // cookie methods
     cookie.setItem = function(key, val, options) {
@@ -68,14 +69,25 @@
     cookie.all = function() {
         var cookies = document.cookie ? document.cookie.split(";") : [];
         var result = {};
-        cookies.forEach(function(cookie) {
-            var keyValue = cookie.split("=");
+        for(var i = 0, len = cookies.length; i < len; i++) {
+            var keyValue = cookies[i].split("=");
             var key = decodeURIComponent(keyValue[0]);
             var val = decodeURIComponent(keyValue[1]);
             result[key] = val;
-        });
+        }
         return result;
     };
+	
+	Storage.all = function() {
+        var result = {};
+		for(var key in this) {
+            if(this.hasOwnProperty(key) && typeof this[key] !== "function" && key !== "length") {
+                result[key] = this[key];
+            }
+        }
+        return result;
+    };
+    
 
     cookie.clear = function() {
         document.cookie = "";
@@ -89,28 +101,24 @@
         switch(type) {
             case "cookie": return cookie;
             case "localStorage": return localStorage;
-            case "sessionStorage": return sessionstorage;
+            case "sessionStorage": return sessionStorage;
             default: return null;
         }
     };
 
     // extends storage's prototype
-    cookie.__proto__ = storage.prototype;
-    localstorage.__proto__ = storage.prototype;
-    sessionstorage.__proto__ = storage.prototype;
-
+    cookie.__proto__ = Storage.__proto__ = storage.prototype;
+    
     // common methods
     var commonMethods = {
         set: "setItem",
         get: "getItem",
-        remove: "removeItem",
-        all: "all",
-        clear: "clear"
+        remove: "removeItem"
     }
     for(commonName in commonMethods) {
         (function(specialName){
             storage.prototype[commonName] = function() {
-                return this[specialName].apply(this, arguments);
+                return this[specialName].apply(this , arguments);
             }
         })(commonMethods[commonName]);
     }

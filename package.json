@@ -1,0 +1,16 @@
+{
+  "name": "myl-storage.js",
+  "version": "1.0.0",
+  "description": "This script is implemented in imitation of js-cookie, which is a useful javascript API.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maoyonglong/storage.js.git"
+  },
+  "author": "maoyonglong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maoyonglong/storage.js/issues"
+  },
+  "homepage": "https://github.com/maoyonglong/storage.js#readme"
+}

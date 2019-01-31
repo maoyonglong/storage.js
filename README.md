@@ -50,3 +50,27 @@ var c = storage("cookie");
 c.extend("fun", function(){});
 c.override("fun", function(){});
 ```
+In addition, the object created by `storage()` is a simple object, but not document.cookie、window.localStorage and window.sessionStorage.  
+When you extend or override the function, you can use `document.cookie` to get the cookie of document, use `window.localStorage` or `this__proto__` to get the localStorage of window and the usage of session storage is the same as local storage.  
+Examples:
+```js
+// cookie storage
+var c = storage("cookie");
+c.extend("getCookieStr", function() {
+    return document.cookie;
+});
+
+// local storage
+var l = storage("localStorage");
+l.extend("getAttrs", function() {
+    // get window.localStorage
+    var localStorage = this.__proto__;
+    var arr = [];
+    for(var key in localStorage) {
+        if(localStorage.hasOwnProperty(key) && typeof localStorage[key] !== "function" && key !== "length") {
+            arr.push(localStorage[key]);
+        }
+    }
+    return arr;
+});
+```

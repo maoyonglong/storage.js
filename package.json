@@ -1,6 +1,6 @@
 {
   "name": "myl-storage.js",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This script is implemented in imitation of js-cookie, which is a useful javascript API.",
   "main": "index.js",
   "script": {

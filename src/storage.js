@@ -26,9 +26,42 @@
     }
 })(function() {
     var cookie = {};
-    var localStorage = window.localStorage;
-    var sessionStorage = window.sessionStorage;
     var Storage = window.localStorage.__proto__;
+    var localStorage = {};
+    var sessionStorage = {};
+    var Storage = window.localStorage.__proto__;
+
+    localStorage.__proto__ = window.localStorage;
+    sessionStorage.__proto__ = window.sessionStorage;
+
+    // tools
+    function getStorageFunc(obj) {
+        var result = {};
+        for(var key in obj) {
+            if(!Object.hasOwnProperty(key) && typeof obj[key] === "function") {
+                result[key] = obj[key];
+            }
+        }
+        return result;
+    }
+
+    function getOwnAttr(obj) {
+        var result = {};
+        for(var key in obj) {
+            if(obj.hasOwnProperty(key) && typeof obj[key] !== "function" && key !== "length") {
+                result[key] = obj[key];
+            }
+        }
+        return result;
+    };
+
+    function mapMethods(methods, callback) {
+        for(var key in methods) {
+            (function(key) {
+                callback(key, methods[key]);
+            })(key);
+        }
+    }
 
     // cookie methods
     cookie.setItem = function(key, val, options) {
@@ -77,15 +110,17 @@
         }
         return result;
     };
-	
-	Storage.all = function() {
-        var result = {};
-		for(var key in this) {
-            if(this.hasOwnProperty(key) && typeof this[key] !== "function" && key !== "length") {
-                result[key] = this[key];
-            }
+
+    // link methods to window.localStorage or window.sessionStorage
+    var winStorageMethods = getStorageFunc(localStorage);
+    mapMethods(winStorageMethods, function(key, method) {
+        sessionStorage[key] = localStorage[key] = function() {
+            return method.apply(this.__proto__, arguments);
         }
-        return result;
+    });
+	
+	sessionStorage.all = localStorage.all = function() {
+        return getOwnAttr(this.__proto__);
     };
     
 
@@ -108,20 +143,18 @@
 
     // extends storage's prototype
     cookie.__proto__ = Storage.__proto__ = storage.prototype;
-    
+
     // common methods
     var commonMethods = {
         set: "setItem",
         get: "getItem",
         remove: "removeItem"
     }
-    for(commonName in commonMethods) {
-        (function(specialName){
-            storage.prototype[commonName] = function() {
-                return this[specialName].apply(this , arguments);
-            }
-        })(commonMethods[commonName]);
-    }
+    mapMethods(commonMethods, function(key, method) {
+        storage.prototype[key] = function() {
+            return this[method].apply(this, arguments);
+        }
+    });
 
     storage.prototype.extend = function(name, func) {
         // if property existed

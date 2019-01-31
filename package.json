@@ -3,6 +3,10 @@
   "version": "1.0.1",
   "description": "This script is implemented in imitation of js-cookie, which is a useful javascript API.",
   "main": "index.js",
+  "script": {
+    "npm start": "node server.js"
+  },
+  "keywords": ["cookie", "localStorage", "sessionStorage"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maoyonglong/storage.js.git"

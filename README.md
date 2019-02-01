@@ -74,3 +74,10 @@ l.extend("getAttrs", function() {
     return arr;
 });
 ```
+
+# Conflict
+You can use noConflict method to eliminate naming conflict.
+```js
+var myStorage = storage.noConflict();
+var c = myStorage("cookie");
+```

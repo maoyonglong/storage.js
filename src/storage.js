@@ -25,11 +25,14 @@
         };
     }
 })(function() {
+    // check
+    if(typeof window === "undefined") {
+        throw "The storage only can be used in frontend.";
+    }
     var cookie = {};
     var Storage = window.localStorage.__proto__;
     var localStorage = {};
     var sessionStorage = {};
-    var Storage = window.localStorage.__proto__;
 
     localStorage.__proto__ = window.localStorage;
     sessionStorage.__proto__ = window.sessionStorage;

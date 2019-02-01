@@ -2,7 +2,7 @@
 This script is implemented in imitation of [js-cookie](https://github.com/js-cookie/js-cookie), which is a useful javascript API.
 
 # Installation
-1. Download the script [here](https://github.com/maoyonglong/storage.js/blob/master/storage.js).
+1. Download the script [here](https://github.com/maoyonglong/storage.js/blob/master/src/storage.js).
 2. use the command `npm i -d myl-storage.js` in npm.
 
 # Basic Usage
